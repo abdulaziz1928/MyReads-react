@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import { useEffect, useState } from "react";
+import HomePage from "./pages/HomePage";
+import SearchPage from "./pages/SearchPage";
+import PageRoutes from "./enums/page-routes";
+import { getAll, update } from "./services/BookService";
+import Book from "./models/book";
 
 function App() {
+  const [books, setBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    getBooks();
+  }, []);
+  const getBooks = async () => {
+    const res = await getAll();
+    setBooks(res);
+  };
+  const handleUpdateBook = async (book: Book, shelf: string) => {
+    await update(book, shelf);
+    book.shelf = shelf;
+    setBooks([...books.filter((b) => book.id !== b.id), book]);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route
+        path={PageRoutes.Home}
+        element={<HomePage books={books} updateBook={handleUpdateBook} />}
+      />
+      <Route
+        path={PageRoutes.Search}
+        element={<SearchPage books={books} updateBook={handleUpdateBook} />}
+      />
+    </Routes>
   );
 }
 
 export default App;
+
