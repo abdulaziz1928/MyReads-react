@@ -1,14 +1,16 @@
 import Book from "../../models/book";
 import BookCover from "./BookCover";
 import BookShelfChanger from "./BookShelfChanger";
-
+import { Context } from "../../App";
+import { useContext } from "react";
+import BookAuthors from "./BookAuthors";
 export interface BookCardProps {
   book: Book;
-  updateBook: (book: Book, shelf: string) => Promise<void>;
 }
 
 export default function BookCard(props: BookCardProps) {
-  const { book, updateBook } = props;
+  const { book } = props;
+  const { updateBook } = useContext(Context)!;
 
   const updateShelf = (shelf: string) => {
     updateBook(book, shelf);
@@ -21,13 +23,7 @@ export default function BookCard(props: BookCardProps) {
         <BookShelfChanger bookShelf={book.shelf} updateShelf={updateShelf} />
       </div>
       <div className="book-title">{book.title}</div>
-      {book.authors?.map((author) => {
-        return (
-          <div key={author} className="book-authors">
-            {author}
-          </div>
-        );
-      })}
+      {book.authors && <BookAuthors authors={book.authors} />}
     </div>
   );
 }

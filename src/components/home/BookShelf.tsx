@@ -4,11 +4,10 @@ import BookCard from "../common/BookCard";
 export interface BookShelfProps {
   title: string;
   books: Book[];
-  updateBook: (book: Book, shelf: string) => Promise<void>;
 }
 
 export default function BookShelf(props: BookShelfProps) {
-  const { title, books, updateBook } = props;
+  const { title, books } = props;
   return (
     <div className="bookshelf">
       <h2 className="bookshelf-title">{title}</h2>
@@ -17,7 +16,7 @@ export default function BookShelf(props: BookShelfProps) {
           {books.map((book) => {
             return (
               <li key={book.title}>
-                <BookCard book={book} updateBook={updateBook} />
+                <BookCard book={book} />
               </li>
             );
           })}

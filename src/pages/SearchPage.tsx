@@ -1,18 +1,14 @@
-import { Link } from "react-router-dom";
-import PageRoutes from "../enums/page-routes";
 import Book from "../models/book";
-import BookCard from "../components/common/BookCard";
 import { useState } from "react";
 import SearchBar from "../components/search/SearchBar";
 import SearchBookResults from "../components/search/SearchBookResults";
 
 export interface SearchPageProps {
   books: Book[];
-  updateBook: (book: Book, shelf: string) => Promise<void>;
 }
 
 export default function SearchPage(props: SearchPageProps) {
-  const { books, updateBook } = props;
+  const { books } = props;
   const [query, setQuery] = useState("");
 
   const updateQuery = (query: string) => {
@@ -21,7 +17,7 @@ export default function SearchPage(props: SearchPageProps) {
 
   const searchResults =
     query === ""
-      ? books
+      ? []
       : books.filter((book) =>
           book.title.toLowerCase().includes(query.toLowerCase().trim())
         );
@@ -29,10 +25,7 @@ export default function SearchPage(props: SearchPageProps) {
   return (
     <div className="search-books">
       <SearchBar updateQuery={updateQuery} />
-      <SearchBookResults
-        searchResults={searchResults}
-        updateBook={updateBook}
-      />
+      <SearchBookResults searchResults={searchResults} />
     </div>
   );
 }

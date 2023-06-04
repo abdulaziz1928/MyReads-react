@@ -6,11 +6,10 @@ import Book from "../models/book";
 
 export interface HomePageProps {
   books: Book[];
-  updateBook: (book: Book, shelf: string) => Promise<void>;
 }
 
 export default function HomePage(props: HomePageProps) {
-  const { books, updateBook } = props;
+  const { books } = props;
   const getShelfBooks = (shelf: string): Book[] => {
     return books.filter((book) => book.shelf === shelf);
   };
@@ -24,19 +23,13 @@ export default function HomePage(props: HomePageProps) {
         <div>
           <BookShelf
             books={getShelfBooks(Shelf.CurrentlyReading)}
-            updateBook={updateBook}
             title="Currently Reading"
           />
           <BookShelf
             books={getShelfBooks(Shelf.WantToRead)}
-            updateBook={updateBook}
             title="Want to Read"
           />
-          <BookShelf
-            books={getShelfBooks(Shelf.Read)}
-            updateBook={updateBook}
-            title="Read"
-          />
+          <BookShelf books={getShelfBooks(Shelf.Read)} title="Read" />
         </div>
       </div>
 
