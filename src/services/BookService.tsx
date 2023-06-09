@@ -35,7 +35,10 @@ export const update = (
     body: JSON.stringify({ shelf }),
   }).then((res) => res.json() as Promise<BookShelves>);
 
-export const search = (query: string, maxResults: number): Promise<Book[]> =>
+export const search = (
+  query: string,
+  maxResults: number = 20
+): Promise<Book[]> =>
   fetch(`${api}/search`, {
     method: "POST",
     headers: {

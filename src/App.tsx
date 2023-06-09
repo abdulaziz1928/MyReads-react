@@ -27,7 +27,12 @@ function App() {
   const updateBook = async (book: Book, shelf: string) => {
     await update(book, shelf);
     const index = books.findIndex((bk) => book.id === bk.id);
-    books[index].shelf = shelf;
+    if (index !== -1) {
+      books[index].shelf = shelf;
+    } else {
+      book.shelf = shelf;
+      books.push(book);
+    }
     setBooks([...books]);
   };
 

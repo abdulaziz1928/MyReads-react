@@ -2,30 +2,44 @@ import Book from "../models/book";
 import { useState } from "react";
 import SearchBar from "../components/search/SearchBar";
 import SearchBookResults from "../components/search/SearchBookResults";
-
+import { debounce } from "throttle-debounce";
+import { search } from "../services/BookService";
 export interface SearchPageProps {
   books: Book[];
 }
 
 export default function SearchPage(props: SearchPageProps) {
   const { books } = props;
-  const [query, setQuery] = useState("");
+  const [bookResults, setBookResults] = useState<Book[]>([]);
 
-  const updateQuery = (query: string) => {
-    setQuery(query.trim());
+  const searchQuery = (query: string) => {
+    debouncedSearch(query.toLowerCase().trim());
   };
 
-  const searchResults =
-    query === ""
-      ? []
-      : books.filter((book) =>
-          book.title.toLowerCase().includes(query.toLowerCase().trim())
-        );
+  const debouncedSearch = debounce(500, (query: string) => {
+    search(query).then((books) => searchResults(books));
+  });
+
+  const searchResults = (results: Book[]) => {
+    if (results.length) {
+      const filteredBooks = books.filter((a) =>
+        results.some((b) => a.id === b.id)
+      );
+
+      for (var i = 0; i < results.length; i++)
+        for (const book of filteredBooks)
+          if (book.id === results[i].id) results[i] = book;
+
+      setBookResults(results);
+    } else {
+      setBookResults([]);
+    }
+  };
 
   return (
     <div className="search-books">
-      <SearchBar updateQuery={updateQuery} />
-      <SearchBookResults searchResults={searchResults} />
+      <SearchBar updateQuery={searchQuery} />
+      <SearchBookResults searchResults={bookResults} />
     </div>
   );
 }

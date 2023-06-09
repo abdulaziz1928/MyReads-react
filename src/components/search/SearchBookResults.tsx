@@ -12,7 +12,7 @@ export default function SearchBookResults(props: SearchBookResultsProps) {
       <ol className="books-grid">
         {searchResults.map((book) => {
           return (
-            <li key={book.title}>
+            <li key={book.id ?? book.title}>
               <BookCard book={book} />
             </li>
           );
