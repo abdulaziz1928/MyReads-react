@@ -17,7 +17,11 @@ export default function SearchPage(props: SearchPageProps) {
   };
 
   const debouncedSearch = debounce(500, (query: string) => {
-    search(query).then((books) => searchResults(books));
+    if (query !== "") {
+      search(query).then((books) => searchResults(books));
+    } else {
+      setBookResults([]);
+    }
   });
 
   const searchResults = (results: Book[]) => {
